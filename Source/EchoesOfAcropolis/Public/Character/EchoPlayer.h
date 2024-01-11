@@ -18,6 +18,8 @@ class ECHOESOFACROPOLIS_API AEchoPlayer : public AEchoCharacterBase
 
 public:
 	explicit AEchoPlayer(const FObjectInitializer& ObjectInitializer);
+
+	virtual void PossessedBy(AController* NewController) override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -41,6 +43,8 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
+
+	virtual void InitAbilityActorInfo() override;
 
 private:
 	/** Camera boom positioning the camera behind the character */

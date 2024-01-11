@@ -3,11 +3,14 @@
 
 #include "Character/EchoPlayer.h"
 
+#include "AbilitySystemComponent.h"
+#include "AbilitySystem/EchoAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Player/EchoPlayerState.h"
 
 AEchoPlayer::AEchoPlayer(const FObjectInitializer& ObjectInitializer) 
 	: AEchoCharacterBase(ObjectInitializer)
@@ -36,6 +39,28 @@ AEchoPlayer::AEchoPlayer(const FObjectInitializer& ObjectInitializer)
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+}
+
+void AEchoPlayer::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitAbilityActorInfo();
+	
+}
+
+void AEchoPlayer::InitAbilityActorInfo()
+{
+	AEchoPlayerState* EchoPlayerState = GetPlayerState<AEchoPlayerState>();
+	check(EchoPlayerState);
+
+	AbilitySystemComponent = EchoPlayerState->GetAbilitySystemComponent();
+	AttributeSet = EchoPlayerState->GetAttributeSet();
+	
+	AbilitySystemComponent->InitAbilityActorInfo(EchoPlayerState, this);
+	Cast<UEchoAbilitySystemComponent>(AbilitySystemComponent)->OnAbilityActorInfoSet();
+	
+	// TODO: Initialize Default Attributes
 }
 
 void AEchoPlayer::TurnAtRate(float Rate)

@@ -13,5 +13,8 @@ UCLASS()
 class ECHOESOFACROPOLIS_API UEchoAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+
+public:
+	void OnAbilityActorInfoSet();
 	
 };

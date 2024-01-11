@@ -3,3 +3,7 @@
 
 #include "AbilitySystem/EchoAbilitySystemComponent.h"
 
+void UEchoAbilitySystemComponent::OnAbilityActorInfoSet()
+{
+	// called from AEchoCharacterBase::InitAbilityActorInfo()
+}

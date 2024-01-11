@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
-#include "NinjaCharacter.h"
-#include "EchoCharacterBase.generated.h"
+#include "GameFramework/PlayerState.h"
+#include "EchoPlayerState.generated.h"
 
 class UAbilitySystemComponent;
 class UAttributeSet;
@@ -14,19 +14,19 @@ class UAttributeSet;
  * 
  */
 UCLASS()
-class ECHOESOFACROPOLIS_API AEchoCharacterBase : public ANinjaCharacter, public IAbilitySystemInterface
+class ECHOESOFACROPOLIS_API AEchoPlayerState : public APlayerState, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
-	explicit AEchoCharacterBase(const FObjectInitializer& ObjectInitializer);
+	AEchoPlayerState();
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	FORCEINLINE UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
 protected:
-	virtual void InitAbilityActorInfo() {}
-	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY()
