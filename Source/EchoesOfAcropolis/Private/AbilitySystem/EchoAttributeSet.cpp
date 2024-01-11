@@ -9,6 +9,10 @@
 
 UEchoAttributeSet::UEchoAttributeSet()
 {
+	InitHealth(100.f);
+	InitMaxHealth(100.f);
+	InitHeat(0.f);
+	InitMaxHeat(100.f);
 }
 
 void UEchoAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
