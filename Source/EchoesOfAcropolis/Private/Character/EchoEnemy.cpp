@@ -7,6 +7,7 @@
 #include "AbilitySystem/EchoAbilitySystemComponent.h"
 
 AEchoEnemy::AEchoEnemy(const FObjectInitializer& ObjectInitializer)
+	: AEchoCharacterBase(ObjectInitializer)
 {
 }
 

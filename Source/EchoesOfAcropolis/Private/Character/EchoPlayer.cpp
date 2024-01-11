@@ -9,16 +9,12 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Player/EchoPlayerState.h"
 
 AEchoPlayer::AEchoPlayer(const FObjectInitializer& ObjectInitializer) 
 	: AEchoCharacterBase(ObjectInitializer)
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-	
-	BaseTurnRate = 45.f;
-	BaseLookUpRate = 45.f;
 	
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -63,16 +59,6 @@ void AEchoPlayer::InitAbilityActorInfo()
 	// TODO: Initialize Default Attributes
 }
 
-void AEchoPlayer::TurnAtRate(float Rate)
-{
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-}
-
-void AEchoPlayer::LookUpAtRate(float Rate)
-{
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-}
-
 void AEchoPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -81,46 +67,4 @@ void AEchoPlayer::Tick(float DeltaSeconds)
 void AEchoPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AEchoPlayer::MoveForward(float Value)
-{
-	if ((Controller != nullptr) && (Value != 0.0f))
-	{
-		const FVector RightVector = UKismetMathLibrary::GetRightVector(GetControlRotation());
-		const FVector UpVector = UKismetMathLibrary::GetUpVector(GetCapsuleComponent()->GetComponentRotation());
-
-		const FVector Direction = FVector::CrossProduct(RightVector, UpVector);
-		const FVector NormalizedDirection = UKismetMathLibrary::Normal(Direction);
-		
-		AddMovementInput(NormalizedDirection, Value);
-	}
-}
-
-void AEchoPlayer::MoveRight(float Value)
-{
-	if ( (Controller != nullptr) && (Value != 0.0f) )
-	{
-		const FRotator Rotation = GetControlRotation();
-	    const FVector Direction = UKismetMathLibrary::GetRightVector(Rotation);
-		
-		AddMovementInput(Direction, Value);
-	}
-}
-
-void AEchoPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
-	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	
-	PlayerInputComponent->BindAxis("MoveForward", this, &AEchoPlayer::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AEchoPlayer::MoveRight);
-	
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &AEchoPlayer::TurnAtRate);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &AEchoPlayer::LookUpAtRate);
 }

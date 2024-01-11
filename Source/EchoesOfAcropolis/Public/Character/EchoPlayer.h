@@ -20,29 +20,11 @@ public:
 	explicit AEchoPlayer(const FObjectInitializer& ObjectInitializer);
 
 	virtual void PossessedBy(AController* NewController) override;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
-
-	void MoveForward(float Value);
-	
-	void MoveRight(float Value);
-	
-	void TurnAtRate(float Rate);
-	
-	void LookUpAtRate(float Rate);
-
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	// End of APawn interface
 
 	virtual void InitAbilityActorInfo() override;
 
