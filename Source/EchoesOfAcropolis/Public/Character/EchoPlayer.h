@@ -17,32 +17,16 @@ class ECHOESOFACROPOLIS_API AEchoPlayer : public AEchoCharacterBase
 	GENERATED_BODY()
 
 public:
-	AEchoPlayer(const FObjectInitializer& ObjectInitializer);
+	explicit AEchoPlayer(const FObjectInitializer& ObjectInitializer);
 
-	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
-
-	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
+	virtual void PossessedBy(AController* NewController) override;
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
 
-	void MoveForward(float Value);
-	
-	void MoveRight(float Value);
-	
-	void TurnAtRate(float Rate);
-	
-	void LookUpAtRate(float Rate);
-
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	// End of APawn interface
+	virtual void InitAbilityActorInfo() override;
 
 private:
 	/** Camera boom positioning the camera behind the character */
@@ -54,8 +38,6 @@ private:
 	UCameraComponent* FollowCamera;
 
 public:
-	/** Returns CameraBoom subobject **/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
