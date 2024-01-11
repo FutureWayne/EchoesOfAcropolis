@@ -15,6 +15,6 @@ class ECHOESOFACROPOLIS_API AEchoCharacterBase : public ANinjaCharacter
 	GENERATED_BODY()
 
 public:
-	AEchoCharacterBase(const FObjectInitializer& ObjectInitializer);
+	explicit AEchoCharacterBase(const FObjectInitializer& ObjectInitializer);
 	
 };
