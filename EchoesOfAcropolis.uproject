@@ -11,7 +11,8 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"NinjaCharacter",
-				"GameplayAbilities"
+				"GameplayAbilities",
+				"EnhancedInput"
 			]
 		}
 	],
@@ -28,6 +29,10 @@
 		},
 		{
 			"Name": "GameplayAbilities",
+			"Enabled": true
+		},
+		{
+			"Name": "EnhancedInput",
 			"Enabled": true
 		}
 	]

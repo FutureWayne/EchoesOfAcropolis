@@ -2,77 +2,114 @@
 
 
 #include "Player/EchoPlayerController.h"
+
+#include "EnhancedInputSubsystems.h"
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
+#include "Input/EchoInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
-AEchoPlayerController::AEchoPlayerController()
+void AEchoPlayerController::BeginPlay()
 {
-	BaseTurnRate = 45.f;
-	BaseLookUpRate = 45.f;
+	Super::BeginPlay();
+
+	check(DefaultMappingContext);
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(DefaultMappingContext, 0);
+	}
 }
 
 void AEchoPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("Jump", IE_Pressed, this, &AEchoPlayerController::Jump);
-	InputComponent->BindAction("Jump", IE_Released, this, &AEchoPlayerController::StopJumping);
-	
-	InputComponent->BindAxis("MoveForward", this, &AEchoPlayerController::MoveForward);
-	InputComponent->BindAxis("MoveRight", this, &AEchoPlayerController::MoveRight);
-	
-	InputComponent->BindAxis("Turn", this, &AEchoPlayerController::AddYawInput);
-	InputComponent->BindAxis("TurnRate", this, &AEchoPlayerController::TurnAtRate);
-	InputComponent->BindAxis("LookUp", this, &AEchoPlayerController::AddPitchInput);
-	InputComponent->BindAxis("LookUpRate", this, &AEchoPlayerController::LookUpAtRate);
+	UEchoInputComponent* EchoInputComponent = Cast<UEchoInputComponent>(InputComponent);
+	check(EchoInputComponent);
+
+	// Bind the jump action
+	EchoInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AEchoPlayerController::Jump);
+	EchoInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AEchoPlayerController::StopJumping);
+
+	// Bind the move action
+	EchoInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AEchoPlayerController::Move);
+
+	// Bind the look action
+	EchoInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AEchoPlayerController::Look);
 }
 
-void AEchoPlayerController::Jump()
+void AEchoPlayerController::Move(const FInputActionValue& InputActionValue)
 {
-	GetCharacter()->Jump();
-}
-
-void AEchoPlayerController::StopJumping()
-{
-	GetCharacter()->StopJumping();
-}
-
-void AEchoPlayerController::MoveForward(float Value)
-{
-	if (Value == 0.0f)
-	{
-		return;
-	}
+	// input is a Vector2D
+	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 	
+	// Add forward movement
 	const FVector RightVector = UKismetMathLibrary::GetRightVector(GetControlRotation());
 	const FVector UpVector = UKismetMathLibrary::GetUpVector(GetCharacter()->GetCapsuleComponent()->GetComponentRotation());
 
 	const FVector Direction = FVector::CrossProduct(RightVector, UpVector);
 	const FVector NormalizedDirection = UKismetMathLibrary::Normal(Direction);
 		
-	GetCharacter()->AddMovementInput(NormalizedDirection, Value);
-}
+	GetCharacter()->AddMovementInput(NormalizedDirection, MovementVector.Y);
 
-void AEchoPlayerController::MoveRight(float Value)
-{
-	if (Value == 0.0f)
-	{
-		return;
-	}
-	
+	// Add right movement
 	const FRotator Rotation = GetControlRotation();
-	const FVector Direction = UKismetMathLibrary::GetRightVector(Rotation);
+	const FVector RightDirection = UKismetMathLibrary::GetRightVector(Rotation);
 		
-	GetCharacter()->AddMovementInput(Direction, Value);
+	GetCharacter()->AddMovementInput(RightDirection, MovementVector.X);
 }
 
-void AEchoPlayerController::TurnAtRate(const float Rate)
+void AEchoPlayerController::Look(const FInputActionValue& Value)
 {
-	AddYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+	// input is a Vector2D
+	const FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	AddYawInput(LookAxisVector.X);
+	AddPitchInput(-LookAxisVector.Y);
 }
 
-void AEchoPlayerController::LookUpAtRate(const float Rate)
+void AEchoPlayerController::Jump(const FInputActionValue& Value)
 {
-	AddPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+	if (ACharacter* ControlledCharacter = GetCharacter())
+	{
+		ControlledCharacter->Jump();
+	}
 }
+
+void AEchoPlayerController::StopJumping(const FInputActionValue& Value)
+{
+	if (ACharacter* ControlledCharacter = GetCharacter())
+	{
+		ControlledCharacter->StopJumping();
+	}
+}
+
+// void AEchoPlayerController::MoveForward(float Value)
+// {
+// 	if (Value == 0.0f)
+// 	{
+// 		return;
+// 	}
+// 	
+// 	const FVector RightVector = UKismetMathLibrary::GetRightVector(GetControlRotation());
+// 	const FVector UpVector = UKismetMathLibrary::GetUpVector(GetCharacter()->GetCapsuleComponent()->GetComponentRotation());
+//
+// 	const FVector Direction = FVector::CrossProduct(RightVector, UpVector);
+// 	const FVector NormalizedDirection = UKismetMathLibrary::Normal(Direction);
+// 		
+// 	GetCharacter()->AddMovementInput(NormalizedDirection, Value);
+// }
+//
+// void AEchoPlayerController::MoveRight(float Value)
+// {
+// 	if (Value == 0.0f)
+// 	{
+// 		return;
+// 	}
+// 	
+// 	const FRotator Rotation = GetControlRotation();
+// 	const FVector Direction = UKismetMathLibrary::GetRightVector(Rotation);
+// 		
+// 	GetCharacter()->AddMovementInput(Direction, Value);
+// }
