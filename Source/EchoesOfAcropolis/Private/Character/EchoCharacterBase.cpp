@@ -3,6 +3,7 @@
 
 #include "Character/EchoCharacterBase.h"
 
+#include "AbilitySystem/EchoAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 
 AEchoCharacterBase::AEchoCharacterBase(const FObjectInitializer& ObjectInitializer)
@@ -18,4 +19,13 @@ AEchoCharacterBase::AEchoCharacterBase(const FObjectInitializer& ObjectInitializ
 UAbilitySystemComponent* AEchoCharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void AEchoCharacterBase::AddCharacterAbilities()
+{
+	UEchoAbilitySystemComponent* EchoAbilitySystemComponent = Cast<UEchoAbilitySystemComponent>(AbilitySystemComponent);
+	if (EchoAbilitySystemComponent)
+	{
+		EchoAbilitySystemComponent->AddCharacterAbilities(StartupAbilities);
+	}
 }

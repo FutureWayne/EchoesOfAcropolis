@@ -16,5 +16,7 @@ class ECHOESOFACROPOLIS_API UEchoAbilitySystemComponent : public UAbilitySystemC
 
 public:
 	void OnAbilityActorInfoSet();
+
+	void AddCharacterAbilities(const TArray<TSubclassOf<class UGameplayAbility>>& StartupAbilities);
 	
 };

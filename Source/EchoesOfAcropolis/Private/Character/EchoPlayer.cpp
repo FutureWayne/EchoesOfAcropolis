@@ -42,7 +42,7 @@ void AEchoPlayer::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	InitAbilityActorInfo();
-	
+	AddCharacterAbilities();
 }
 
 void AEchoPlayer::InitAbilityActorInfo()
@@ -56,7 +56,7 @@ void AEchoPlayer::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(EchoPlayerState, this);
 	Cast<UEchoAbilitySystemComponent>(AbilitySystemComponent)->OnAbilityActorInfoSet();
 	
-	// TODO: Initialize Default Attributes
+	// TODO: Initialize Default Attributes thought gameplay effect
 }
 
 void AEchoPlayer::Tick(float DeltaSeconds)

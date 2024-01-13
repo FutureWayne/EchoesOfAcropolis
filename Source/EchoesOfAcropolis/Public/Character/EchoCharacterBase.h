@@ -25,10 +25,16 @@ public:
 
 protected:
 	virtual void InitAbilityActorInfo() {}
+
+	void AddCharacterAbilities();
 	
 	UPROPERTY()
 	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY()
 	UAttributeSet* AttributeSet;
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Ability")
+	TArray<TSubclassOf<class UGameplayAbility>> StartupAbilities;
 };
