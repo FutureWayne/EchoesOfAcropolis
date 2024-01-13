@@ -3,18 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "NinjaCharacter.h"
 #include "EchoCharacterBase.generated.h"
+
+class UAbilitySystemComponent;
+class UAttributeSet;
 
 /**
  * 
  */
 UCLASS()
-class ECHOESOFACROPOLIS_API AEchoCharacterBase : public ANinjaCharacter
+class ECHOESOFACROPOLIS_API AEchoCharacterBase : public ANinjaCharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
-	AEchoCharacterBase(const FObjectInitializer& ObjectInitializer);
+	explicit AEchoCharacterBase(const FObjectInitializer& ObjectInitializer);
 	
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+protected:
+	virtual void InitAbilityActorInfo() {}
+	
+	UPROPERTY()
+	UAbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY()
+	UAttributeSet* AttributeSet;
 };
