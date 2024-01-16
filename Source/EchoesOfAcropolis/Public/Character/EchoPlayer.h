@@ -25,8 +25,12 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
-
+	
 	virtual void InitAbilityActorInfo() override;
+
+	virtual FVector GetCombatAimLocation() override;
+
+    virtual FVector GetCombatAimDirection() override;
 
 private:
 	/** Camera boom positioning the camera behind the character */

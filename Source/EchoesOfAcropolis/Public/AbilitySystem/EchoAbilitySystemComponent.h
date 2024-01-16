@@ -18,5 +18,9 @@ public:
 	void OnAbilityActorInfoSet();
 
 	void AddCharacterAbilities(const TArray<TSubclassOf<class UGameplayAbility>>& StartupAbilities);
+
+	void AbilityTagHeld(const FGameplayTag& InputTag);
+	void AbilityTagPressed(const FGameplayTag& InputTag);
+	void AbilityTagReleased(const FGameplayTag& InputTag);
 	
 };

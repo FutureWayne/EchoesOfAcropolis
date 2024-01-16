@@ -21,6 +21,16 @@ UAbilitySystemComponent* AEchoCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+FVector AEchoCharacterBase::GetCombatAimLocation()
+{
+	return ICombatInterface::GetCombatAimLocation();
+}
+
+FVector AEchoCharacterBase::GetCombatAimDirection()
+{
+	return ICombatInterface::GetCombatAimDirection();
+}
+
 void AEchoCharacterBase::AddCharacterAbilities()
 {
 	UEchoAbilitySystemComponent* EchoAbilitySystemComponent = Cast<UEchoAbilitySystemComponent>(AbilitySystemComponent);

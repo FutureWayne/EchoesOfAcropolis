@@ -6,6 +6,9 @@
 #include "GameFramework/PlayerController.h"
 #include "EchoPlayerController.generated.h"
 
+struct FGameplayTag;
+class UEchoInputConfig;
+class UEchoAbilitySystemComponent;
 struct FInputActionValue;
 class UInputAction;
 class UInputMappingContext;
@@ -16,6 +19,20 @@ UCLASS()
 class ECHOESOFACROPOLIS_API AEchoPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+	
+public:
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+
+	UEchoAbilitySystemComponent* GetEchoAbilitySystemComponent();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
+	UEchoInputConfig* EchoInputConfig;
+
+	UPROPERTY()
+	UEchoAbilitySystemComponent* EchoAbilitySystemComponent;
+
 
 protected:
 	virtual void BeginPlay() override;

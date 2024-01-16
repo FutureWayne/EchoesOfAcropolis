@@ -28,6 +28,8 @@ class ECHOESOFACROPOLIS_API UEchoInputConfig : public UDataAsset
 	GENERATED_BODY()
 
 public:
+    const UInputAction* FindAbilityInputActionByTag(const FGameplayTag& InputTag, bool bLogNotFound = false) const;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FEchoInputAction> AbilityInputActions;
 };

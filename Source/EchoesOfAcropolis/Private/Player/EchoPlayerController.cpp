@@ -3,11 +3,53 @@
 
 #include "Player/EchoPlayerController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
+#include "AbilitySystem/EchoAbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 #include "Input/EchoInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+
+void AEchoPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	if (GetEchoAbilitySystemComponent() == nullptr)
+	{
+		return;
+	}
+
+	GetEchoAbilitySystemComponent()->AbilityTagPressed(InputTag);
+	
+}
+
+void AEchoPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if (GetEchoAbilitySystemComponent() == nullptr)
+	{
+		return;
+	}
+
+	GetEchoAbilitySystemComponent()->AbilityTagReleased(InputTag);
+}
+
+void AEchoPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+	if (GetEchoAbilitySystemComponent() == nullptr)
+	{
+		return;
+	}
+
+	GetEchoAbilitySystemComponent()->AbilityTagHeld(InputTag);
+}
+
+UEchoAbilitySystemComponent* AEchoPlayerController::GetEchoAbilitySystemComponent()
+{
+	if (!EchoAbilitySystemComponent)
+	{
+		EchoAbilitySystemComponent = CastChecked<UEchoAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn()));
+	}
+	return EchoAbilitySystemComponent;
+}
 
 void AEchoPlayerController::BeginPlay()
 {
@@ -37,6 +79,9 @@ void AEchoPlayerController::SetupInputComponent()
 
 	// Bind the look action
 	EchoInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AEchoPlayerController::Look);
+
+	// Bind the ability actions
+	EchoInputComponent->BindAbilityActions(EchoInputConfig, this, &AEchoPlayerController::AbilityInputTagPressed, &AEchoPlayerController::AbilityInputTagReleased, &AEchoPlayerController::AbilityInputTagHeld);
 }
 
 void AEchoPlayerController::Move(const FInputActionValue& InputActionValue)

@@ -42,7 +42,6 @@ void AEchoPlayer::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	InitAbilityActorInfo();
-	AddCharacterAbilities();
 }
 
 void AEchoPlayer::InitAbilityActorInfo()
@@ -55,8 +54,41 @@ void AEchoPlayer::InitAbilityActorInfo()
 	
 	AbilitySystemComponent->InitAbilityActorInfo(EchoPlayerState, this);
 	Cast<UEchoAbilitySystemComponent>(AbilitySystemComponent)->OnAbilityActorInfoSet();
-	
+
+	AddCharacterAbilities();
 	// TODO: Initialize Default Attributes thought gameplay effect
+}
+
+FVector AEchoPlayer::GetCombatAimLocation()
+{
+	const FVector CameraLocation = FollowCamera->GetComponentLocation();
+	const FRotator CameraRotation = FollowCamera->GetComponentRotation();
+
+	FVector Start = CameraLocation;
+
+	//TODO: 10000 is an arbitrary distance, consider use a attribute to config this
+	FVector End = CameraLocation + (CameraRotation.Vector() * 10000);
+
+	FHitResult HitResult;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this); // Ignore the player character in the line trace
+
+	if (bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		ECC_Visibility,
+		CollisionParams
+	))
+	{
+		return HitResult.ImpactPoint;
+	}
+	return End;
+}
+
+FVector AEchoPlayer::GetCombatAimDirection()
+{
+	return FollowCamera->GetForwardVector();
 }
 
 void AEchoPlayer::Tick(float DeltaSeconds)
