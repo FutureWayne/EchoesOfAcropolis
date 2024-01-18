@@ -9,6 +9,7 @@
 AEchoEnemy::AEchoEnemy(const FObjectInitializer& ObjectInitializer)
 	: AEchoCharacterBase(ObjectInitializer)
 {
+	AbilitySystemComponent = CreateDefaultSubobject<UEchoAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 }
 
 void AEchoEnemy::BeginPlay()
