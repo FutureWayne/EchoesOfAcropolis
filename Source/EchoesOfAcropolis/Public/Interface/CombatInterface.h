@@ -25,4 +25,6 @@ public:
 	virtual FVector GetCombatAimLocation();
 
 	virtual FVector GetCombatAimDirection();
+
+	virtual FVector GetWeaponTargetingSourceLocation(int WeaponIndex = 0);
 };
