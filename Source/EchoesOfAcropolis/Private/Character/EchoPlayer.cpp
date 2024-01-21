@@ -91,6 +91,13 @@ FVector AEchoPlayer::GetCombatAimDirection()
 	return FollowCamera->GetForwardVector();
 }
 
+FVector AEchoPlayer::GetWeaponTargetingSourceLocation(int WeaponIndex)
+{
+	// TODO: return actual weapon location based on index
+	
+	return GetActorLocation();
+}
+
 void AEchoPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

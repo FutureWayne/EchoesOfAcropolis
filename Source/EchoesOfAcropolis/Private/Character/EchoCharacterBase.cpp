@@ -31,6 +31,11 @@ FVector AEchoCharacterBase::GetCombatAimDirection()
 	return ICombatInterface::GetCombatAimDirection();
 }
 
+FVector AEchoCharacterBase::GetWeaponTargetingSourceLocation(int WeaponIndex)
+{
+	return ICombatInterface::GetWeaponTargetingSourceLocation(WeaponIndex);
+}
+
 void AEchoCharacterBase::AddCharacterAbilities()
 {
 	UEchoAbilitySystemComponent* EchoAbilitySystemComponent = Cast<UEchoAbilitySystemComponent>(AbilitySystemComponent);

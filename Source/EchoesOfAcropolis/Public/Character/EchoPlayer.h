@@ -32,6 +32,8 @@ protected:
 
     virtual FVector GetCombatAimDirection() override;
 
+	virtual FVector GetWeaponTargetingSourceLocation(int WeaponIndex = 0) override;
+
 private:
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
