@@ -28,6 +28,8 @@ public:
 
 	virtual FVector GetCombatAimDirection() override;
 
+	virtual FVector GetWeaponTargetingSourceLocation(int WeaponIndex = 0) override;
+
 protected:
 	virtual void InitAbilityActorInfo() {}
 

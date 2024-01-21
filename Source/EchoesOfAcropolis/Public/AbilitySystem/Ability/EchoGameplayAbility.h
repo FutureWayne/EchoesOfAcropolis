@@ -15,6 +15,9 @@ class ECHOESOFACROPOLIS_API UEchoGameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
+	UFUNCTION(BlueprintCallable, Category = "Echo|Ability")
+	AController* GetControllerFromActorInfo() const;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Echo|Ability")
 	FGameplayTag StartupInputTag;
 };
