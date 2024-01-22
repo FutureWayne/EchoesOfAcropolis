@@ -42,7 +42,7 @@ protected:
 	static int32 FindFirstPawnHitResult(const TArray<FHitResult>& HitResults);
 
 	void DoSingleBulletTrace(const FVector& TraceStartPos, const FVector& TraceEndPos, float SweepRadius, bool bIsSimulated, FHitResult&
-	                         OutHitResult);
+							 OutHitResult) const;
 
 private:
 	
@@ -66,8 +66,7 @@ private:
 		}
 	};
 
-
-	static FTransform GetTargetingTransform(APawn* SourcePawn);
+	FTransform GetTargetingTransform(APawn* SourcePawn) const;
 	void TraceBulletsInCartridge(const FRaytracingInput& RaytracingInput, TArray<FHitResult> OutHits);
-	void PerformTargeting(OUT TArray<FHitResult>& OutHits);
+	void PerformTargeting(OUT const TArray<FHitResult>& OutHits);
 };
