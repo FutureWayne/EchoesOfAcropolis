@@ -21,6 +21,15 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
+	UFUNCTION(BlueprintCallable, Category = "ADS")
+	void SetAimingStatus(bool bNewAimingStatus);
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ADS")
+	float ZoomFOV;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ADS")
+	float ZoomSpeed;
+
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -42,6 +51,10 @@ private:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	bool bIsAiming = false;
+	float DefaultFOV;
+	float CurrentFOV;
 
 public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
