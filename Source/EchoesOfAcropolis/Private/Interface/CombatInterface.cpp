@@ -13,3 +13,8 @@ FVector ICombatInterface::GetCombatAimDirection()
 {
 	return FVector();
 }
+
+FVector ICombatInterface::GetWeaponTargetingSourceLocation(int WeaponIndex)
+{
+	return FVector();
+}

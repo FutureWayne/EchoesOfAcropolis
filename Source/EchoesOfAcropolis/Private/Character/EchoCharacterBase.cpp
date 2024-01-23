@@ -9,7 +9,7 @@
 AEchoCharacterBase::AEchoCharacterBase(const FObjectInitializer& ObjectInitializer)
 	: ANinjaCharacter(ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
@@ -29,6 +29,11 @@ FVector AEchoCharacterBase::GetCombatAimLocation()
 FVector AEchoCharacterBase::GetCombatAimDirection()
 {
 	return ICombatInterface::GetCombatAimDirection();
+}
+
+FVector AEchoCharacterBase::GetWeaponTargetingSourceLocation(int WeaponIndex)
+{
+	return ICombatInterface::GetWeaponTargetingSourceLocation(WeaponIndex);
 }
 
 void AEchoCharacterBase::AddCharacterAbilities()
