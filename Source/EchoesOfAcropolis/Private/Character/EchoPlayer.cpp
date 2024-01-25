@@ -35,6 +35,9 @@ AEchoPlayer::AEchoPlayer(const FObjectInitializer& ObjectInitializer)
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	DefaultFOV = FollowCamera->FieldOfView;
+	CurrentFOV = DefaultFOV;
 }
 
 void AEchoPlayer::PossessedBy(AController* NewController)
@@ -42,6 +45,11 @@ void AEchoPlayer::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	InitAbilityActorInfo();
+}
+
+void AEchoPlayer::SetAimingStatus(bool bNewAimingStatus)
+{
+	bIsAiming = bNewAimingStatus;
 }
 
 void AEchoPlayer::InitAbilityActorInfo()
@@ -101,6 +109,10 @@ FVector AEchoPlayer::GetWeaponTargetingSourceLocation(int WeaponIndex)
 void AEchoPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	const float TargetFOV = bIsAiming ? ZoomFOV : DefaultFOV;
+	CurrentFOV = FMath::FInterpTo(CurrentFOV, TargetFOV, DeltaSeconds, ZoomSpeed);
+	FollowCamera->SetFieldOfView(CurrentFOV);
 }
 
 void AEchoPlayer::BeginPlay()

@@ -22,5 +22,8 @@ public:
 	void AbilityTagHeld(const FGameplayTag& InputTag);
 	void AbilityTagPressed(const FGameplayTag& InputTag);
 	void AbilityTagReleased(const FGameplayTag& InputTag);
+
+	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& Spec) override;
+	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& Spec) override;
 	
 };

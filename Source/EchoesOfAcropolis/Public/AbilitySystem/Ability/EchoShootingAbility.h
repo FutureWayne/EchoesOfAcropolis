@@ -16,6 +16,7 @@ class ECHOESOFACROPOLIS_API UEchoShootingAbility : public UEchoGameplayAbility
 
 public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Echo|Shooting Ability")
 	UGameplayEffect* DamageEffect;
@@ -42,10 +43,11 @@ protected:
 	static int32 FindFirstPawnHitResult(const TArray<FHitResult>& HitResults);
 
 	void DoSingleBulletTrace(const FVector& TraceStartPos, const FVector& TraceEndPos, float SweepRadius, bool bIsSimulated, FHitResult&
-	                         OutHitResult);
+							 OutHitResult) const;
 
 private:
 	
+
 	struct FRaytracingInput
 	{
 		// The direction of the trace if aim were perfect
@@ -67,7 +69,8 @@ private:
 	};
 
 
-	static FTransform GetTargetingTransform(APawn* SourcePawn);
+	FTransform GetTargetingTransform(APawn* SourcePawn) const;
 	void TraceBulletsInCartridge(const FRaytracingInput& RaytracingInput, TArray<FHitResult> OutHits);
-	void PerformTargeting(OUT TArray<FHitResult>& OutHits);
+	void PerformTargeting(OUT const TArray<FHitResult>& OutHits);
+
 };
