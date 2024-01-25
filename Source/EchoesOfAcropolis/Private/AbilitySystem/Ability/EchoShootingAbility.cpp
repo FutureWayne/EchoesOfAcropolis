@@ -110,7 +110,9 @@ int32 UEchoShootingAbility::FindFirstPawnHitResult(const TArray<FHitResult>& Hit
 
 
 void UEchoShootingAbility::DoSingleBulletTrace(const FVector& TraceStartPos, const FVector& TraceEndPos,
+
                                                float SweepRadius, bool bIsSimulated, OUT FHitResult& OutHitResult) const
+
 {
 #if ENABLE_DRAW_DEBUG
 	if (EchoConsoleVariables::DrawBulletTracesDuration > 0.0f)
@@ -172,7 +174,9 @@ void UEchoShootingAbility::TraceBulletsInCartridge(const FRaytracingInput& Raytr
 	}
 }
 
+
 void UEchoShootingAbility::PerformTargeting(const TArray<FHitResult>& OutHits)
+
 {
 	APawn* AvatarPawn = Cast<APawn>(GetAvatarActorFromActorInfo());
 	check(AvatarPawn);
@@ -196,6 +200,7 @@ void UEchoShootingAbility::PerformTargeting(const TArray<FHitResult>& OutHits)
 }
 
 FTransform UEchoShootingAbility::GetTargetingTransform(APawn* SourcePawn) const
+
 {
 	ICombatInterface* CombatInterface = Cast<ICombatInterface>(SourcePawn);
 	check(CombatInterface);
@@ -209,18 +214,23 @@ FTransform UEchoShootingAbility::GetTargetingTransform(APawn* SourcePawn) const
 		// Get player camera transform
 		FVector CamLoc;
 		FRotator CamRot;
+
 		PC->GetPlayerViewPoint(/*out*/ CamLoc, /*out*/ CamRot);
 		
 		// Determine initial focal point based on camera
 		const FVector AimDir = CamRot.Vector().GetSafeNormal();
+
 		FVector FocalLoc = CamLoc + (AimDir * ShootingRange);
+
 		
 		// Since the camera is behind the player, move the trace start to the front of the player
 		const FVector WeaponLoc = CombatInterface->GetWeaponTargetingSourceLocation();
 		// Use the project point of weapon loc onto the aim dir as new cam loc
 		CamLoc = FocalLoc + (((WeaponLoc - FocalLoc) | AimDir) * AimDir);
 		// Move the focal point based on new cam loc
+
 		FocalLoc = CamLoc + (AimDir * ShootingRange);
+
 
 		return FTransform((FocalLoc - CamLoc).Rotation(), CamLoc);
 	}
