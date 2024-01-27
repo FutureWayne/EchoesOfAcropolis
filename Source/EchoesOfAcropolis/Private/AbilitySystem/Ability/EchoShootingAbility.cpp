@@ -2,9 +2,15 @@
 
 
 #include "AbilitySystem/Ability/EchoShootingAbility.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Interface/CombatInterface.h"
 #include "DrawDebugHelpers.h"
+#include "NiagaraFunctionLibrary.h"
 #include "EchoesOfAcropolis/EchoesOfAcropolis.h"
+#include "Kismet/GameplayStatics.h"
+#include "Singleton/EchoGameplayTags.h"
 
 namespace EchoConsoleVariables
 {
@@ -74,14 +80,30 @@ void UEchoShootingAbility::StartShootTargeting()
 	const AActor* AvatarActor = CurrentActorInfo->AvatarActor.Get();
 	check(AvatarActor);
 
-	const UAbilitySystemComponent* MyAbilityComponent = CurrentActorInfo->AbilitySystemComponent.Get();
-	check(MyAbilityComponent);
+	const UAbilitySystemComponent* SourceASC = CurrentActorInfo->AbilitySystemComponent.Get();
+	check(SourceASC);
 
 	const AController* Controller = GetControllerFromActorInfo();
 	check(Controller);
 
 	TArray<FHitResult> OutHits;
 	PerformTargeting(/*out*/ OutHits);
+
+	for (const FHitResult& CurHitResult : OutHits)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, CurHitResult.ImpactPoint);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, CurHitResult.ImpactPoint, FRotator::ZeroRotator);
+
+		// Add damage to the target
+		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(CurHitResult.GetActor()))
+		{
+			const FEchoGameplayTags GameplayTags = FEchoGameplayTags::Get();
+			const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffect, GetAbilityLevel(), SourceASC->MakeEffectContext());
+			const float DamageValue = Damage.GetValueAtLevel(GetAbilityLevel());
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, DamageValue);
+			TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+	}
 }
 
 int32 UEchoShootingAbility::FindFirstPawnHitResult(const TArray<FHitResult>& HitResults)
@@ -137,7 +159,7 @@ void UEchoShootingAbility::DoSingleBulletTrace(const FVector& TraceStartPos, con
 	}
 }
 
-void UEchoShootingAbility::TraceBulletsInCartridge(const FRaytracingInput& RaytracingInput, TArray<FHitResult> OutHits)
+void UEchoShootingAbility::TraceBulletsInCartridge(const FRaytracingInput& RaytracingInput, TArray<FHitResult>& OutHits)
 {
 	for (int32 BulletIndex = 0; BulletIndex < BulletsPerCartridge; ++BulletIndex)
 	{
@@ -175,8 +197,7 @@ void UEchoShootingAbility::TraceBulletsInCartridge(const FRaytracingInput& Raytr
 }
 
 
-void UEchoShootingAbility::PerformTargeting(const TArray<FHitResult>& OutHits)
-
+void UEchoShootingAbility::PerformTargeting(TArray<FHitResult>& OutHits)
 {
 	APawn* AvatarPawn = Cast<APawn>(GetAvatarActorFromActorInfo());
 	check(AvatarPawn);

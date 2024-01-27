@@ -6,6 +6,8 @@
 #include "AbilitySystem/Ability/EchoGameplayAbility.h"
 #include "EchoShootingAbility.generated.h"
 
+class UNiagaraSystem;
+class USoundBase;
 /**
  * 
  */
@@ -17,24 +19,35 @@ class ECHOESOFACROPOLIS_API UEchoShootingAbility : public UEchoGameplayAbility
 public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Echo|Shooting Ability")
-	UGameplayEffect* DamageEffect;
+	/* Ability System Parameters */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Shooting Ability|Ability System")
+	TSubclassOf<UGameplayEffect> DamageEffect;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Echo|Shooting Ability")
+	/* Shooting Bullet Parameters */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Shooting Ability|Bullet")
 	float ShootingRange;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Echo|Shooting Ability")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Shooting Ability|Bullet")
 	float BulletSpreadAngle;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Echo|Shooting Ability")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "|Shooting Ability|Bullet")
 	float BulletSpreadExponent;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Echo|Shooting Ability")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Shooting Ability|Bullet")
 	float BulletSweepRadius;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Echo|Shooting Ability")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Shooting Ability|Bullet")
 	int32 BulletsPerCartridge;
+
+	/* VFX & SFX Parameters */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Shooting Ability|Effects")
+	UNiagaraSystem* ImpactEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Shooting Ability|Effects")
+	USoundBase* ImpactSound;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Shooting Ability|Effects")
+	USoundBase* ShootingSound;
 
 protected:
 	UFUNCTION(BlueprintCallable)
@@ -70,7 +83,7 @@ private:
 
 
 	FTransform GetTargetingTransform(APawn* SourcePawn) const;
-	void TraceBulletsInCartridge(const FRaytracingInput& RaytracingInput, TArray<FHitResult> OutHits);
-	void PerformTargeting(OUT const TArray<FHitResult>& OutHits);
+	void TraceBulletsInCartridge(const FRaytracingInput& RaytracingInput, TArray<FHitResult>& OutHits);
+	void PerformTargeting(OUT TArray<FHitResult>& OutHits);
 
 };

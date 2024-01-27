@@ -22,6 +22,10 @@ struct FEchoGameplayTags
 	FGameplayTag InputTag_Aim;
 	FGameplayTag InputTag_Fire;
 	FGameplayTag InputTag_Dash;
+
+	FGameplayTag Damage;
+
+	FGameplayTag Effect_HitReact;
 	
 private:
 	static FEchoGameplayTags GameplayTags;

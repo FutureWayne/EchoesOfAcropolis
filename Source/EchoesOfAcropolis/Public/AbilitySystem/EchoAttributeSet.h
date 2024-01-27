@@ -111,6 +111,14 @@ public:
 	FGameplayAttributeData MaxHeat;
 	ATTRIBUTE_ACCESSORS(UEchoAttributeSet, MaxHeat);
 
+	/*
+	 * Meta Attributes
+	 */
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UEchoAttributeSet, IncomingDamage);
+
 private:
 	static void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& EffectProperties);
 };

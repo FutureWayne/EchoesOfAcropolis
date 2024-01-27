@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/EchoAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AEchoCharacterBase::AEchoCharacterBase(const FObjectInitializer& ObjectInitializer)
 	: ANinjaCharacter(ObjectInitializer)
@@ -36,11 +37,41 @@ FVector AEchoCharacterBase::GetWeaponTargetingSourceLocation(int WeaponIndex)
 	return ICombatInterface::GetWeaponTargetingSourceLocation(WeaponIndex);
 }
 
-void AEchoCharacterBase::AddCharacterAbilities()
+void AEchoCharacterBase::InitDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+}
+
+void AEchoCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> EffectClass, const float Level) const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(EffectClass);
+
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(EffectClass, Level, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
+void AEchoCharacterBase::AddCharacterAbilities() const
 {
 	UEchoAbilitySystemComponent* EchoAbilitySystemComponent = Cast<UEchoAbilitySystemComponent>(AbilitySystemComponent);
 	if (EchoAbilitySystemComponent)
 	{
 		EchoAbilitySystemComponent->AddCharacterAbilities(StartupAbilities);
 	}
+}
+
+void AEchoCharacterBase::Die()
+{
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	GetCharacterMovement()->DisableMovement();
+	GetCharacterMovement()->SetComponentTickEnabled(false);
 }

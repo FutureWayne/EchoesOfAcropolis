@@ -27,4 +27,21 @@ void FEchoGameplayTags::InitializeGameplayTags()
 		FName("InputTag.Dash"),
 		FString("Input Tag for Dashing")
 		);
+
+	/* 
+	 * Damage Tags
+	 */
+
+	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage"),
+		FString("Damage Tag")
+		);
+
+	/*
+	 * Effect Tags
+	 */
+	GameplayTags.Effect_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Effect.HitReact"),
+		FString("Effect Tag for Hit React")
+		);
 }

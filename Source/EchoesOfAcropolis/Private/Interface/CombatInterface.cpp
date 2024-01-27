@@ -18,3 +18,7 @@ FVector ICombatInterface::GetWeaponTargetingSourceLocation(int WeaponIndex)
 {
 	return FVector();
 }
+
+void ICombatInterface::Die()
+{
+}

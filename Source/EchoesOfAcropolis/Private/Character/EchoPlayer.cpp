@@ -64,7 +64,7 @@ void AEchoPlayer::InitAbilityActorInfo()
 	Cast<UEchoAbilitySystemComponent>(AbilitySystemComponent)->OnAbilityActorInfoSet();
 
 	AddCharacterAbilities();
-	// TODO: Initialize Default Attributes thought gameplay effect
+	InitDefaultAttributes();
 }
 
 FVector AEchoPlayer::GetCombatAimLocation()
