@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Ability/EchoDashAbility.h"
 
+#include "NiagaraFunctionLibrary.h"
 #include "Abilities/Tasks/AbilityTask_ApplyRootMotionConstantForce.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Camera/CameraComponent.h"
@@ -25,7 +26,13 @@ void UEchoDashAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 	// Get the last movement input
 	const FVector LastMovementDirection = Character->GetLastMovementInputVector();
-
+	// Cancel the ability if the character is not moving
+	if (UKismetMathLibrary::Vector_IsNearlyZero(LastMovementDirection))
+	{
+		CancelAbility(Handle, ActorInfo, ActivationInfo, false);
+		return;
+	}
+	
 	// Get the aiming movement direction
 	const FVector OriginalAimingDirection = Character->GetFollowCamera()->GetForwardVector();
 	const FVector AimingDirection = OriginalAimingDirection * FVector(1.0f, 1.0f, 1.2f); // Add a little bit of height to the movement
@@ -68,6 +75,8 @@ void UEchoDashAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	{
 		DashForceTask->ReadyForActivation();
 	}
+
+	PlayDashEffect();
 }
 
 UAbilityTask_PlayMontageAndWait* UEchoDashAbility::PlayDashMontage()
@@ -140,6 +149,13 @@ EDashDirection UEchoDashAbility::FindDashDirection(const FVector& FacingDirectio
 	}
 }
 
+void UEchoDashAbility::PlayDashEffect() const
+{
+	// TODO: Play Dash Effect through gameplay cues
+	const AActor* Avatar = GetAvatarActorFromActorInfo();
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DashEffect, Avatar->GetActorLocation(), UKismetMathLibrary::MakeRotFromX(Direction));
+}
+
 void UEchoDashAbility::OnDashCancelled()
 {
 	if (const AEchoCharacterBase* Character = Cast<AEchoCharacterBase>(GetAvatarActorFromActorInfo()))
@@ -152,6 +168,11 @@ void UEchoDashAbility::OnDashCancelled()
 
 void UEchoDashAbility::OnDashCompleted()
 {
+	// const AActor* Avatar = GetAvatarActorFromActorInfo();
+	// const FVector Location = Avatar->GetActorLocation();
+	// const FRotator Rotation = UKismetMathLibrary::MakeRotFromX(Avatar->GetActorForwardVector());
+	// UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DashEffect, Location, Rotation);
+	
 	// Add a small delay before ending the ability
 	UKismetSystemLibrary::Delay(this, AbilityDuration - RootMotionDuration, FLatentActionInfo(0, 0, TEXT("OnDashCompleted"), this));
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);

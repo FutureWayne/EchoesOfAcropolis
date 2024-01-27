@@ -1,0 +1,23 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Engine/AssetManager.h"
+#include "EchoAssetManager.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class ECHOESOFACROPOLIS_API UEchoAssetManager : public UAssetManager
+{
+	GENERATED_BODY()
+
+public:
+	static UEchoAssetManager& Get();
+
+protected:
+	virtual void StartInitialLoading() override;
+	
+};

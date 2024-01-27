@@ -6,6 +6,7 @@
 #include "AbilitySystem/Ability/EchoGameplayAbility.h"
 #include "EchoDashAbility.generated.h"
 
+class UNiagaraSystem;
 class UAbilityTask_ApplyRootMotionConstantForce;
 class UAbilityTask_PlayMontageAndWait;
 
@@ -34,7 +35,11 @@ public:
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	
+	UAbilityTask_PlayMontageAndWait* PlayDashMontage();
 
+	UAbilityTask_ApplyRootMotionConstantForce* ApplyDashForce();
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
 	float Strength = 1850.f;
 
@@ -44,15 +49,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
 	float AbilityDuration = 0.55f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dash")
 	UAnimMontage* DashAnimMontage;
 
-	UAbilityTask_PlayMontageAndWait* PlayDashMontage();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dash")
+	UNiagaraSystem* DashEffect;
 
-	UAbilityTask_ApplyRootMotionConstantForce* ApplyDashForce();
-	
 private:
 	static EDashDirection FindDashDirection(const FVector& FacingDirection, const FVector& LastMovementDirection);
+
+	void PlayDashEffect() const;
 	
 	FVector Direction;
 };
