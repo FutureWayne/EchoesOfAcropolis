@@ -26,6 +26,8 @@ struct FEchoGameplayTags
 	FGameplayTag Damage;
 
 	FGameplayTag Effect_HitReact;
+
+	FGameplayTag Cooldown_Dash;
 	
 private:
 	static FEchoGameplayTags GameplayTags;

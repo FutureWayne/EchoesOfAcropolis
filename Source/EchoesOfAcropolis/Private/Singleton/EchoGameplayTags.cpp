@@ -44,4 +44,12 @@ void FEchoGameplayTags::InitializeGameplayTags()
 		FName("Effect.HitReact"),
 		FString("Effect Tag for Hit React")
 		);
+
+	/*
+	 * Cooldown Tags
+	 */
+	GameplayTags.Cooldown_Dash = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Cooldown.Dash"),
+		FString("Cooldown Tag for Dash")
+		);
 }
