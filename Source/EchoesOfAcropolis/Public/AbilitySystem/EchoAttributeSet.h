@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 #pragma once
 
@@ -110,6 +110,14 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Secondary Attributes")
 	FGameplayAttributeData MaxHeat;
 	ATTRIBUTE_ACCESSORS(UEchoAttributeSet, MaxHeat);
+
+	/*
+	 * Meta Attributes
+	 */
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UEchoAttributeSet, IncomingDamage);
 
 private:
 	static void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& EffectProperties);

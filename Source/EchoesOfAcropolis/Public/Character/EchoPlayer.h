@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 #pragma once
 
@@ -21,6 +21,24 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Ability|ADS")
+	void SetAimingStatus(bool bNewAimingStatus);
+
+	UFUNCTION(BlueprintCallable, Category = "Ability|Dash")
+	void SetDashStatus(bool bNewDashingStatus);
+
+	UFUNCTION(BlueprintCallable, Category = "Ability|Dash")
+	void ResetDashCooldown();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ability|Dash")
+	void OnDashCooldownReset();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability|ADS")
+	float ZoomFOV;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability|ADS")
+	float ZoomSpeed;
+
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -32,8 +50,6 @@ protected:
 
     virtual FVector GetCombatAimDirection() override;
 
-	virtual FVector GetWeaponTargetingSourceLocation(int WeaponIndex = 0) override;
-
 private:
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -42,6 +58,10 @@ private:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	bool bIsAiming = false;
+	float DefaultFOV;
+	float CurrentFOV;
 
 public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

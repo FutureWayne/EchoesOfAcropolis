@@ -1,8 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 
 #include "AbilitySystem/EchoAbilitySystemComponent.h"
-
 #include "AbilitySystem/Ability/EchoGameplayAbility.h"
 
 void UEchoAbilitySystemComponent::OnAbilityActorInfoSet()
@@ -38,7 +37,7 @@ void UEchoAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 			if (EchoAbility)
 			{
 				AbilitySpec.DynamicAbilityTags.AddTag(EchoAbility->StartupInputTag);
-				GiveAbility(AbilitySpec);
+				FGameplayAbilitySpecHandle Handle = GiveAbility(AbilitySpec);
 			}
 		}
 	}
@@ -91,5 +90,25 @@ void UEchoAbilitySystemComponent::AbilityTagReleased(const FGameplayTag& InputTa
 		{
 			AbilitySpecInputReleased(AbilitySpec);
 		}
+	}
+}
+
+void UEchoAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec& Spec)
+{
+	Super::AbilitySpecInputPressed(Spec);
+
+	if (Spec.IsActive())
+	{
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, Spec.ActivationInfo.GetActivationPredictionKey());
+	}
+}
+
+void UEchoAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec& Spec)
+{
+	Super::AbilitySpecInputReleased(Spec);
+
+	if (Spec.IsActive())
+	{
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, Spec.ActivationInfo.GetActivationPredictionKey());
 	}
 }
