@@ -21,6 +21,7 @@ UEchoEquipmentInstance* UEchoGameplayAbility_FromEquip::GetAssociatedEquipmentIn
 	return nullptr;
 }
 
+#if WITH_EDITOR
 EDataValidationResult UEchoGameplayAbility_FromEquip::IsDataValid(TArray<FText>& ValidationErrors)
 {
 	EDataValidationResult Result = Super::IsDataValid(ValidationErrors);
@@ -33,5 +34,4 @@ EDataValidationResult UEchoGameplayAbility_FromEquip::IsDataValid(TArray<FText>&
 	
 	return Result;
 }
-
-
+#endif
