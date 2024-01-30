@@ -1,8 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 
 #include "AbilitySystem/Ability/EchoDashAbility.h"
 
+#include "NiagaraFunctionLibrary.h"
 #include "Abilities/Tasks/AbilityTask_ApplyRootMotionConstantForce.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Camera/CameraComponent.h"
@@ -25,7 +26,13 @@ void UEchoDashAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 	// Get the last movement input
 	const FVector LastMovementDirection = Character->GetLastMovementInputVector();
-
+	// Cancel the ability if the character is not moving
+	if (UKismetMathLibrary::Vector_IsNearlyZero(LastMovementDirection))
+	{
+		CancelAbility(Handle, ActorInfo, ActivationInfo, false);
+		return;
+	}
+	
 	// Get the aiming movement direction
 	const FVector OriginalAimingDirection = Character->GetFollowCamera()->GetForwardVector();
 	const FVector AimingDirection = OriginalAimingDirection * FVector(1.0f, 1.0f, 1.2f); // Add a little bit of height to the movement
@@ -68,6 +75,8 @@ void UEchoDashAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	{
 		DashForceTask->ReadyForActivation();
 	}
+
+	PlayDashEffect();
 }
 
 UAbilityTask_PlayMontageAndWait* UEchoDashAbility::PlayDashMontage()
@@ -110,6 +119,12 @@ UAbilityTask_ApplyRootMotionConstantForce* UEchoDashAbility::ApplyDashForce()
 		Task->OnFinish.AddUniqueDynamic(this, &UEchoDashAbility::OnDashCompleted);
 	}
 
+	AEchoPlayer* Character = Cast<AEchoPlayer>(GetAvatarActorFromActorInfo());
+	if (Character != nullptr)
+	{
+		Character->SetDashStatus(true);
+	}
+
 	return Task;
 }
 
@@ -140,6 +155,13 @@ EDashDirection UEchoDashAbility::FindDashDirection(const FVector& FacingDirectio
 	}
 }
 
+void UEchoDashAbility::PlayDashEffect() const
+{
+	// TODO: Play Dash Effect through gameplay cues
+	const AActor* Avatar = GetAvatarActorFromActorInfo();
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DashEffect, Avatar->GetActorLocation(), UKismetMathLibrary::MakeRotFromX(Direction));
+}
+
 void UEchoDashAbility::OnDashCancelled()
 {
 	if (const AEchoCharacterBase* Character = Cast<AEchoCharacterBase>(GetAvatarActorFromActorInfo()))
@@ -154,5 +176,12 @@ void UEchoDashAbility::OnDashCompleted()
 {
 	// Add a small delay before ending the ability
 	UKismetSystemLibrary::Delay(this, AbilityDuration - RootMotionDuration, FLatentActionInfo(0, 0, TEXT("OnDashCompleted"), this));
+
+	AEchoPlayer* Character = Cast<AEchoPlayer>(GetAvatarActorFromActorInfo());
+	if (Character != nullptr)
+	{
+		Character->SetDashStatus(false);
+	}
+
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

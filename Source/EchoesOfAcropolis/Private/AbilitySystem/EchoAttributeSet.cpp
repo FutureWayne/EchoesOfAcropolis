@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 
 #include "AbilitySystem/EchoAttributeSet.h"
@@ -6,6 +6,9 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
+#include "Interface/CombatInterface.h"
+#include "Singleton/EchoGameplayTags.h"
+
 
 UEchoAttributeSet::UEchoAttributeSet()
 {
@@ -40,15 +43,38 @@ void UEchoAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
-
-		// TODO: When health reaches 0
 	}
 
 	if (Data.EvaluatedData.Attribute == GetHeatAttribute())
 	{
 		SetHeat(FMath::Clamp(GetHeat(), 0.f, GetMaxHeat()));
+	}
 
-		// TODO: When max heat reached
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float LocalIncomingDamage = GetIncomingDamage();
+		SetIncomingDamage(0.f);
+		if (LocalIncomingDamage > 0.f)
+		{
+			const float NewHealth = GetHealth() - LocalIncomingDamage;
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+
+			const bool bFatal = NewHealth <= 0.f;
+			if (!bFatal)
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FEchoGameplayTags::Get().Effect_HitReact);
+				EffectProperties.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
+			else
+			{
+				ICombatInterface* CombatInterface = Cast<ICombatInterface>(EffectProperties.TargetAvatarActor);
+				if (CombatInterface)
+				{
+					CombatInterface->Die();
+				}
+			}
+		}
 	}
 }
 
