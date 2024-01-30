@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 #pragma once
 
@@ -22,5 +22,5 @@ public:
 	FGameplayTag StartupInputTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	FScalableFloat Damage;
+	float Damage;
 };

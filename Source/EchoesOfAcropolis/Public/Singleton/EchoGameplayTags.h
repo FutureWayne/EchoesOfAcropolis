@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 #pragma once
 
@@ -20,8 +20,12 @@ struct FEchoGameplayTags
 	static void InitializeGameplayTags();
 
 	FGameplayTag InputTag_Aim;
-	FGameplayTag InputTag_Fire;
+	FGameplayTag InputTag_Fire_Main;
+	FGameplayTag InputTag_Fire_Side;
 	FGameplayTag InputTag_Dash;
+
+	FGameplayTag Combat_Socket_Main;
+	FGameplayTag Combat_Socket_Side;
 
 	FGameplayTag Damage;
 

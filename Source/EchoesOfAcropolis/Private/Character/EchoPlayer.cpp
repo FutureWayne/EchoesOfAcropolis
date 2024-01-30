@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 
 #include "Character/EchoPlayer.h"
@@ -99,12 +99,6 @@ FVector AEchoPlayer::GetCombatAimDirection()
 	return FollowCamera->GetForwardVector();
 }
 
-FVector AEchoPlayer::GetWeaponTargetingSourceLocation(int WeaponIndex)
-{
-	// TODO: return actual weapon location based on index
-	
-	return GetActorLocation();
-}
 
 void AEchoPlayer::Tick(float DeltaSeconds)
 {

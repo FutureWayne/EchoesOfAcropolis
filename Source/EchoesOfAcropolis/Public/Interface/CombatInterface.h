@@ -1,8 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
@@ -26,7 +27,8 @@ public:
 
 	virtual FVector GetCombatAimDirection();
 
-	virtual FVector GetWeaponTargetingSourceLocation(int WeaponIndex = 0);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FVector GetCombatSocketLocation(FGameplayTag SocketTag);
 	
 	virtual void Die();
 };

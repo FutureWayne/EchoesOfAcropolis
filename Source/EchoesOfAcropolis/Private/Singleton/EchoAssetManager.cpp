@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 
 #include "Singleton/EchoAssetManager.h"

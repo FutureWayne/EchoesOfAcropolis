@@ -8,6 +8,10 @@ public class EchoesOfAcropolis : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "NinjaCharacter", "GameplayAbilities", "GameplayTags", "GameplayTasks", "Niagara", "UMG" });
+		PublicDependencyModuleNames.AddRange(new string[]
+		{
+			"Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "NinjaCharacter", "GameplayAbilities",
+			"GameplayTags", "GameplayTasks", "Niagara", "UMG", "AIModule"
+		});
 	}
 }

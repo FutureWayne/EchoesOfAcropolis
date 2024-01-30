@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 #pragma once
 
@@ -40,8 +40,6 @@ protected:
 	virtual FVector GetCombatAimLocation() override;
 
     virtual FVector GetCombatAimDirection() override;
-
-	virtual FVector GetWeaponTargetingSourceLocation(int WeaponIndex = 0) override;
 
 private:
 	/** Camera boom positioning the camera behind the character */

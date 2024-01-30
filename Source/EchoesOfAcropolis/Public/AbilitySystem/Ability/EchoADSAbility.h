@@ -1,8 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EchoGameplayAbility_FromEquip.h"
 #include "AbilitySystem/Ability/EchoGameplayAbility.h"
 #include "EchoADSAbility.generated.h"
 
@@ -10,7 +11,7 @@
  * 
  */
 UCLASS()
-class ECHOESOFACROPOLIS_API UEchoADSAbility : public UEchoGameplayAbility
+class ECHOESOFACROPOLIS_API UEchoADSAbility : public UEchoGameplayAbility_FromEquip
 {
 	GENERATED_BODY()
 

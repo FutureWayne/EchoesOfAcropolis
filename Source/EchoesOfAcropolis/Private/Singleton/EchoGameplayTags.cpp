@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 
 #include "Singleton/EchoGameplayTags.h"
@@ -18,14 +18,33 @@ void FEchoGameplayTags::InitializeGameplayTags()
 		FString("Input Tag for Aiming")
 		);
 
-	GameplayTags.InputTag_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("InputTag.Fire"),
-		FString("Input Tag for Firing")
+	GameplayTags.InputTag_Fire_Main = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Fire.Main"),
+		FString("Input Tag for Firing Main Weapon")
+		);
+
+	GameplayTags.InputTag_Fire_Side = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Fire.Side"),
+		FString("Input Tag for Firing Side Weapon")
 		);
 
 	GameplayTags.InputTag_Dash = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("InputTag.Dash"),
 		FString("Input Tag for Dashing")
+		);
+
+	/*
+	 * Combat Tags
+	 */
+
+	GameplayTags.Combat_Socket_Main = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Combat.Socket.Main"),
+		FString("Combat Tag for Main Socket")
+		);
+
+	GameplayTags.Combat_Socket_Side = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Combat.Socket.Side"),
+		FString("Combat Tag for Side Socket")
 		);
 
 	/* 

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 #pragma once
 
@@ -31,7 +31,7 @@ public:
 
 	virtual FVector GetCombatAimDirection() override;
 
-	virtual FVector GetWeaponTargetingSourceLocation(int WeaponIndex = 0) override;
+	virtual FVector GetCombatSocketLocation_Implementation(FGameplayTag SocketTag) override;
 
 	/* End Combat Interface */
 
@@ -54,6 +54,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Echo|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+	UPROPERTY(EditAnywhere, Category = "Echo|Weapon")
+	FName MainWeaponSocketName;
+
+	UPROPERTY(EditAnywhere, Category = "Echo|Weapon")
+	FName SideWeaponSocketName;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Echo|Ability")
