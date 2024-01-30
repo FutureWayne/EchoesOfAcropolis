@@ -21,13 +21,22 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
-	UFUNCTION(BlueprintCallable, Category = "ADS")
+	UFUNCTION(BlueprintCallable, Category = "Ability|ADS")
 	void SetAimingStatus(bool bNewAimingStatus);
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ADS")
+	UFUNCTION(BlueprintCallable, Category = "Ability|Dash")
+	void SetDashStatus(bool bNewDashingStatus);
+
+	UFUNCTION(BlueprintCallable, Category = "Ability|Dash")
+	void ResetDashCooldown();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ability|Dash")
+	void OnDashCooldownReset();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability|ADS")
 	float ZoomFOV;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ADS")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability|ADS")
 	float ZoomSpeed;
 
 protected:

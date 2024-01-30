@@ -119,6 +119,12 @@ UAbilityTask_ApplyRootMotionConstantForce* UEchoDashAbility::ApplyDashForce()
 		Task->OnFinish.AddUniqueDynamic(this, &UEchoDashAbility::OnDashCompleted);
 	}
 
+	AEchoPlayer* Character = Cast<AEchoPlayer>(GetAvatarActorFromActorInfo());
+	if (Character != nullptr)
+	{
+		Character->SetDashStatus(true);
+	}
+
 	return Task;
 }
 
@@ -168,12 +174,14 @@ void UEchoDashAbility::OnDashCancelled()
 
 void UEchoDashAbility::OnDashCompleted()
 {
-	// const AActor* Avatar = GetAvatarActorFromActorInfo();
-	// const FVector Location = Avatar->GetActorLocation();
-	// const FRotator Rotation = UKismetMathLibrary::MakeRotFromX(Avatar->GetActorForwardVector());
-	// UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DashEffect, Location, Rotation);
-	
 	// Add a small delay before ending the ability
 	UKismetSystemLibrary::Delay(this, AbilityDuration - RootMotionDuration, FLatentActionInfo(0, 0, TEXT("OnDashCompleted"), this));
+
+	AEchoPlayer* Character = Cast<AEchoPlayer>(GetAvatarActorFromActorInfo());
+	if (Character != nullptr)
+	{
+		Character->SetDashStatus(false);
+	}
+
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

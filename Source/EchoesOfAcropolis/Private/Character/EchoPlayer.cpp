@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/EchoPlayerState.h"
+#include "Singleton/EchoGameplayTags.h"
 
 AEchoPlayer::AEchoPlayer(const FObjectInitializer& ObjectInitializer) 
 	: AEchoCharacterBase(ObjectInitializer)
@@ -50,6 +51,26 @@ void AEchoPlayer::PossessedBy(AController* NewController)
 void AEchoPlayer::SetAimingStatus(bool bNewAimingStatus)
 {
 	bIsAiming = bNewAimingStatus;
+}
+
+void AEchoPlayer::SetDashStatus(bool bNewDashingStatus)
+{
+	if (bNewDashingStatus)
+	{
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+	}
+	
+}
+
+void AEchoPlayer::ResetDashCooldown()
+{
+	const FEchoGameplayTags GameplayTags = FEchoGameplayTags::Get();
+	AbilitySystemComponent->RemoveActiveEffectsWithGrantedTags(FGameplayTagContainer(GameplayTags.Cooldown_Dash));
+	OnDashCooldownReset();
 }
 
 void AEchoPlayer::InitAbilityActorInfo()

@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/EchoAbilitySystemComponent.h"
 #include "AbilitySystem/EchoAttributeSet.h"
+#include "Character/EchoPlayer.h"
 #include "Components/WidgetComponent.h"
 
 AEchoEnemy::AEchoEnemy(const FObjectInitializer& ObjectInitializer)
@@ -57,6 +58,15 @@ void AEchoEnemy::InitAbilityActorInfo()
 
 void AEchoEnemy::Die()
 {
+	// Reset Player Dash Cooldown
+	// TODO: Placeholder, just hard code here for now
+	
+	AEchoPlayer* Player = Cast<AEchoPlayer>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (Player)
+	{
+		Player->ResetDashCooldown();
+	}
+	
 	SetLifeSpan(LifeSpan);
 	Super::Die();
 }
