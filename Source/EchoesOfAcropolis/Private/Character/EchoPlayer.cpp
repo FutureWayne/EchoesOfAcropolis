@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 
 #include "Character/EchoPlayer.h"
@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/EchoPlayerState.h"
+#include "Singleton/EchoGameplayTags.h"
 
 AEchoPlayer::AEchoPlayer(const FObjectInitializer& ObjectInitializer) 
 	: AEchoCharacterBase(ObjectInitializer)
@@ -52,6 +53,26 @@ void AEchoPlayer::SetAimingStatus(bool bNewAimingStatus)
 	bIsAiming = bNewAimingStatus;
 }
 
+void AEchoPlayer::SetDashStatus(bool bNewDashingStatus)
+{
+	if (bNewDashingStatus)
+	{
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+	}
+	
+}
+
+void AEchoPlayer::ResetDashCooldown()
+{
+	const FEchoGameplayTags GameplayTags = FEchoGameplayTags::Get();
+	AbilitySystemComponent->RemoveActiveEffectsWithGrantedTags(FGameplayTagContainer(GameplayTags.Cooldown_Dash));
+	OnDashCooldownReset();
+}
+
 void AEchoPlayer::InitAbilityActorInfo()
 {
 	AEchoPlayerState* EchoPlayerState = GetPlayerState<AEchoPlayerState>();
@@ -64,7 +85,7 @@ void AEchoPlayer::InitAbilityActorInfo()
 	Cast<UEchoAbilitySystemComponent>(AbilitySystemComponent)->OnAbilityActorInfoSet();
 
 	AddCharacterAbilities();
-	// TODO: Initialize Default Attributes thought gameplay effect
+	InitDefaultAttributes();
 }
 
 FVector AEchoPlayer::GetCombatAimLocation()
@@ -99,12 +120,6 @@ FVector AEchoPlayer::GetCombatAimDirection()
 	return FollowCamera->GetForwardVector();
 }
 
-FVector AEchoPlayer::GetWeaponTargetingSourceLocation(int WeaponIndex)
-{
-	// TODO: return actual weapon location based on index
-	
-	return GetActorLocation();
-}
 
 void AEchoPlayer::Tick(float DeltaSeconds)
 {
