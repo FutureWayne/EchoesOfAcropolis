@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Echo of Acropolis. All Rights Reserved.
 
 
 #include "Interface/CombatInterface.h"
@@ -14,7 +14,6 @@ FVector ICombatInterface::GetCombatAimDirection()
 	return FVector();
 }
 
-FVector ICombatInterface::GetWeaponTargetingSourceLocation(int WeaponIndex)
+void ICombatInterface::Die()
 {
-	return FVector();
 }
